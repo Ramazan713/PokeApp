@@ -6,9 +6,9 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.pokedexapp.presentation.list.HomeFragment"
+        android:name="com.example.pokedexapp.presentation.list.ListFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_list" >
         <action
             android:id="@+id/action_homeFragment_to_detailFragment3"
             app:destination="@id/detailFragment" />
@@ -17,5 +17,9 @@
         android:id="@+id/detailFragment"
         android:name="com.example.pokedexapp.presentation.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="pokemonId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
