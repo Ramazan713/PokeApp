@@ -41,6 +41,9 @@ android {
     }
 }
 
+val paging_version = "3.2.1"
+val room_version = "2.6.0"
+
 
 dependencies {
 
@@ -71,4 +74,12 @@ dependencies {
 
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("androidx.paging:paging-runtime-ktx:$paging_version")
+    implementation("androidx.room:room-paging:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
 }

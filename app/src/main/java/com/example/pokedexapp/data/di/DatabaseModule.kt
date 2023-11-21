@@ -1,23 +1,21 @@
 package com.example.pokedexapp.data.di
 
+import android.app.Application
+import androidx.room.Room
 import com.example.pokedexapp.data.local.AppDatabase
-import com.example.pokedexapp.data.remote.PokeApi
-import com.example.pokedexapp.data.repo.PokemonRepoImpl
-import com.example.pokedexapp.domain.repo.PokemonRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-object RepoModule {
-
+object DatabaseModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepo(api: PokeApi,db: AppDatabase): PokemonRepo =
-        PokemonRepoImpl(api,db)
+    fun provideDatabase(application: Application): AppDatabase =
+        Room.databaseBuilder(application,AppDatabase::class.java,"pokemons.db")
+            .build()
 }
