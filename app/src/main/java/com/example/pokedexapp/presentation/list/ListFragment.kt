@@ -47,24 +47,6 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
         navController = findNavController()
         initView()
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(p0: String?): Boolean {
-                return true
-            }
-        })
-
-        binding.filterButton.setOnClickListener {
-            val dialog = OrderDialog(this,OrderEnum.Name)
-            dialog.show(childFragmentManager,null)
-        }
-
-
-
-        viewModel.loadData()
         observeData()
     }
 
@@ -73,6 +55,24 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
         val layoutManager = GridLayoutManager(requireContext(),3)
         binding.listRecyclerView.adapter = adapter
         binding.listRecyclerView.layoutManager = layoutManager
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                query?.let { q->
+                    viewModel.onEvent(ListEvent.Search(q))
+                }
+                return true
+            }
+        })
+
+        binding.filterButton.setOnClickListener {
+            val dialog = OrderDialog(this,viewModel.sortBy.value)
+            dialog.show(childFragmentManager,null)
+        }
     }
 
     private fun observeData(){
@@ -83,6 +83,8 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
            }
         }
 
+        viewModel.sortBy.observe(viewLifecycleOwner){}
+
     }
 
     override fun onClick(item: PokemonPart) {
@@ -90,13 +92,12 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
         navController.navigate(destination)
     }
 
+    override fun onSelected(orderEnum: OrderEnum) {
+        viewModel.onEvent(ListEvent.SortBy(orderEnum))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onSelected(orderEnum: OrderEnum) {
-
     }
 }

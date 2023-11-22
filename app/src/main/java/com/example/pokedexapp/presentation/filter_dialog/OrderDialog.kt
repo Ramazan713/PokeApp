@@ -47,11 +47,11 @@ class OrderDialog constructor(
         }
 
         binding.radioGroup.setOnCheckedChangeListener { group, i ->
-            when(group.id){
+            when(group.checkedRadioButtonId){
                 binding.nameRadio.id -> {
                     listener.onSelected(OrderEnum.Name)
                 }
-                binding.radioGroup.id -> {
+                binding.numberRadio.id -> {
                     listener.onSelected(OrderEnum.Number)
                 }
             }

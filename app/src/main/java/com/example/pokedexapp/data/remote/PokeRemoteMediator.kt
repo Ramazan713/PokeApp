@@ -12,6 +12,7 @@ import com.example.pokedexapp.data.local.entities.PokemonEntity
 import com.example.pokedexapp.data.local.entities.PokemonTypeEntity
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 @OptIn(ExperimentalPagingApi::class)
@@ -19,6 +20,25 @@ class PokeRemoteMediator constructor(
     private val api: PokeApi,
     private val db: AppDatabase
 ): RemoteMediator<Int,PokemonEntity>() {
+
+    override suspend fun initialize(): InitializeAction {
+
+        return InitializeAction.SKIP_INITIAL_REFRESH
+
+//        val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+//        return if (System.currentTimeMillis() - db.lastUpdated() <= cacheTimeout)
+//        {
+//            // Cached data is up-to-date, so there is no need to re-fetch
+//            // from the network.
+//            InitializeAction.SKIP_INITIAL_REFRESH
+//        } else {
+//            // Need to refresh cached data from network; returning
+//            // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
+//            // APPEND and PREPEND from running until REFRESH succeeds.
+//            InitializeAction.LAUNCH_INITIAL_REFRESH
+//        }
+    }
+
 
     override suspend fun load(
         loadType: LoadType,

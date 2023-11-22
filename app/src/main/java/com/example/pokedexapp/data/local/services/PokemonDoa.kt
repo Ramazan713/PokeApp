@@ -27,8 +27,31 @@ interface PokemonDoa {
     @Query("select * from pokemons where id = :id")
     suspend fun getPokemonDetailById(id: Int): PokemonDetailRelation?
 
-    @Query("select * from pokemons")
-    fun getPokemons(): PagingSource<Int,PokemonEntity>
+    @Query("select * from pokemons order by id")
+    fun getPokemonsOrderById(): PagingSource<Int,PokemonEntity>
+
+    @Query("select * from pokemons order by name")
+    fun getPokemonsOrderByName(): PagingSource<Int,PokemonEntity>
+
+    @Query("""
+        select * from pokemons where 
+        id like :query or
+        name like :query
+        order by id
+    """)
+    fun searchPokemonsOrderById(
+        query: String
+    ): PagingSource<Int,PokemonEntity>
+
+    @Query("""
+        select * from pokemons where 
+        id like :query or
+        name like :query
+        order by name
+    """)
+    fun searchPokemonsOrderByName(
+        query: String
+    ): PagingSource<Int,PokemonEntity>
 
 
     @Query("delete from pokemons")
