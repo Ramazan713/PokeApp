@@ -76,15 +76,12 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
     }
 
     private fun observeData(){
-
         viewModel.pagingData.observe(viewLifecycleOwner){pagingData->
            lifecycleScope.launch {
                adapter.submitData(pagingData)
            }
         }
-
         viewModel.sortBy.observe(viewLifecycleOwner){}
-
     }
 
     override fun onClick(item: PokemonPart) {

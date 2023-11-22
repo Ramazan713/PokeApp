@@ -15,7 +15,7 @@ interface PokemonDoa {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPokemon(pokemonEntity: PokemonEntity)
+    suspend fun insertPokemons(pokemonEntities: List<PokemonEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoves(moves: List<MovesEntity>)

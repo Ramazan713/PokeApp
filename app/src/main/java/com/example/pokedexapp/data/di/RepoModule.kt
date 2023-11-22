@@ -2,6 +2,7 @@ package com.example.pokedexapp.data.di
 
 import com.example.pokedexapp.data.local.AppDatabase
 import com.example.pokedexapp.data.remote.PokeApi
+import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
 import com.example.pokedexapp.data.repo.PokemonRepoImpl
 import com.example.pokedexapp.domain.repo.PokemonRepo
 import dagger.Module
@@ -18,6 +19,6 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepo(api: PokeApi,db: AppDatabase): PokemonRepo =
-        PokemonRepoImpl(api,db)
+    fun providePokemonRepo(apiHelper: PokeApiServiceHelper,db: AppDatabase): PokemonRepo =
+        PokemonRepoImpl(apiHelper,db)
 }

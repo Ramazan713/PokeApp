@@ -13,6 +13,8 @@ import com.example.pokedexapp.data.mapper.toPokemonDetail
 import com.example.pokedexapp.data.mapper.toPokemonPart
 import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.PokeRemoteMediator
+import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
+import com.example.pokedexapp.domain.constants.K
 import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.models.PokemonDetail
@@ -23,36 +25,18 @@ import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class PokemonRepoImpl @Inject constructor(
-    private val api: PokeApi,
+    private val apiHelper: PokeApiServiceHelper,
     private val db: AppDatabase
 ): PokemonRepo {
-    override suspend fun getPokemons(): Resource<List<PokemonPart>> {
-        try {
-            val response = api.getPokemons(0,10)
-            val result = response.body()
-            if(response.isSuccessful && result != null){
-//                val models = result.results.map { it.toPokemon() }
-                return Resource.Success(listOf())
-            }
-            return Resource.Error(response.errorBody()?.string() ?: "Error")
-        }
-        catch (e: CancellationException){
-            throw e
-        }
-        catch (e: Exception){
-            return Resource.Error(e.localizedMessage)
-        }
-    }
-
     @OptIn(ExperimentalPagingApi::class)
     override fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>> {
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 20
+                pageSize = K.pageSize
             ),
             initialKey = 1,
-            remoteMediator = PokeRemoteMediator(api,db),
+            remoteMediator = PokeRemoteMediator(db,K.pageSize,apiHelper),
             pagingSourceFactory = {
                 when(opt.orderEnum){
                     OrderEnum.Number -> {
@@ -77,7 +61,7 @@ class PokemonRepoImpl @Inject constructor(
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 20
+                pageSize = K.pageSize
             ),
             initialKey = 1,
             pagingSourceFactory = {

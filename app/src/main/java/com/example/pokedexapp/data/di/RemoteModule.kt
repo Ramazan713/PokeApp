@@ -2,6 +2,8 @@ package com.example.pokedexapp.data.di
 
 import android.app.Application
 import com.example.pokedexapp.data.remote.PokeApi
+import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
+import com.example.pokedexapp.data.remote.services.PokeApiServiceHelperImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +23,10 @@ object RemoteModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PokeApi::class.java)
+
+
+    @Provides
+    fun provideApiHelper(api: PokeApi): PokeApiServiceHelper =
+        PokeApiServiceHelperImpl(api)
 
 }

@@ -8,9 +8,6 @@ import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.utils.Resource
 
 interface PokemonRepo {
-
-    suspend fun getPokemons(): Resource<List<PokemonPart>>
-
     fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
 
     fun searchPokemons(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
