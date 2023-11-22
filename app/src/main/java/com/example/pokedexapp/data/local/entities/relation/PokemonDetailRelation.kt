@@ -7,19 +7,19 @@ import com.example.pokedexapp.data.local.entities.PokemonEntity
 import com.example.pokedexapp.data.local.entities.PokemonTypeEntity
 
 
-data class PokemonUnitRelation(
+data class PokemonDetailRelation(
     @Embedded
     val pokemon: PokemonEntity,
 
     @Relation(
-        entity = PokemonEntity::class,
+        entity = MovesEntity::class,
         parentColumn = "id",
         entityColumn = "pokemonId"
     )
     val moves: List<MovesEntity>,
 
     @Relation(
-        entity = PokemonEntity::class,
+        entity = PokemonTypeEntity::class,
         parentColumn = "id",
         entityColumn = "pokemonId"
     )

@@ -9,10 +9,12 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import androidx.paging.map
 import com.example.pokedexapp.data.local.AppDatabase
-import com.example.pokedexapp.data.mapper.toPokemon
+import com.example.pokedexapp.data.mapper.toPokemonDetail
+import com.example.pokedexapp.data.mapper.toPokemonPart
 import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.PokeRemoteMediator
-import com.example.pokedexapp.domain.models.Pokemon
+import com.example.pokedexapp.domain.models.PokemonDetail
+import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.repo.PokemonRepo
 import com.example.pokedexapp.domain.utils.Resource
 import kotlinx.coroutines.CancellationException
@@ -22,7 +24,7 @@ class PokemonRepoImpl @Inject constructor(
     private val api: PokeApi,
     private val db: AppDatabase
 ): PokemonRepo {
-    override suspend fun getPokemons(): Resource<List<Pokemon>> {
+    override suspend fun getPokemons(): Resource<List<PokemonPart>> {
         try {
             val response = api.getPokemons(0,10)
             val result = response.body()
@@ -41,7 +43,7 @@ class PokemonRepoImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPokemonsPaging(): LiveData<PagingData<Pokemon>> {
+    override fun getPokemonsPaging(): LiveData<PagingData<PokemonPart>> {
 
         val pager = Pager(
             config = PagingConfig(
@@ -55,8 +57,12 @@ class PokemonRepoImpl @Inject constructor(
         )
 
         return pager.liveData.map {pagingData->
-            pagingData.map { it.toPokemon() }
+            pagingData.map { it.toPokemonPart() }
         }
+    }
+
+    override suspend fun getPokemonDetail(id: Int): PokemonDetail? {
+        return db.pokemonDao().getPokemonDetailById(id)?.toPokemonDetail()
     }
 
 

@@ -82,7 +82,7 @@ class PokeRemoteMediator constructor(
                     when(it.stat.name){
                         "hp" -> hp = it.base_stat
                         "attack" -> attack = it.base_stat
-                        "defence" -> defence = it.base_stat
+                        "defense" -> defence = it.base_stat
                         "special-attack" -> specialAttack = it.base_stat
                         "special-defense" -> specialDefense = it.base_stat
                         "speed" -> speed = it.base_stat
@@ -93,7 +93,7 @@ class PokeRemoteMediator constructor(
                 val pokemonEntity = PokemonEntity(
                     id = id,
                     name = pokemonDto.name,
-                    imageUrl = detailResult.sprites.front_default,
+                    imageUrl = detailResult.sprites.other.officialArtwork.front_default,
                     height = detailResult.height,
                     weight = detailResult.weight,
                     colorName = speciesResult.color.name,

@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pokedexapp.databinding.FragmentListBinding
-import com.example.pokedexapp.domain.models.Pokemon
+import com.example.pokedexapp.domain.models.PokemonPart
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -65,8 +64,8 @@ class ListFragment : Fragment(), ListAdapter.Listener {
 
     }
 
-    override fun onClick(item: Pokemon) {
-        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(1)
+    override fun onClick(item: PokemonPart) {
+        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(item.id)
         navController.navigate(destination)
     }
 

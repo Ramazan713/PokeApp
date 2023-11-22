@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.example.pokedexapp.data.local.entities.MovesEntity
 import com.example.pokedexapp.data.local.entities.PokemonEntity
 import com.example.pokedexapp.data.local.entities.PokemonTypeEntity
+import com.example.pokedexapp.data.local.entities.relation.PokemonDetailRelation
 
 @Dao
 interface PokemonDoa {
@@ -22,6 +23,9 @@ interface PokemonDoa {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTypes(types: List<PokemonTypeEntity>)
 
+
+    @Query("select * from pokemons where id = :id")
+    suspend fun getPokemonDetailById(id: Int): PokemonDetailRelation?
 
     @Query("select * from pokemons")
     fun getPokemons(): PagingSource<Int,PokemonEntity>

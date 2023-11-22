@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.example.pokedexapp.domain.models.Pokemon
+import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.repo.PokemonRepo
 import com.example.pokedexapp.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +17,8 @@ class ListViewModel @Inject constructor(
     private val pokemonRepo: PokemonRepo
 ): ViewModel(){
 
-    private val mutableData = MutableLiveData<List<Pokemon>>()
-    val data: LiveData<List<Pokemon>> get() =  mutableData
+    private val mutableData = MutableLiveData<List<PokemonPart>>()
+    val data: LiveData<List<PokemonPart>> get() =  mutableData
 
     val pagingData = pokemonRepo.getPokemonsPaging().cachedIn(viewModelScope)
 

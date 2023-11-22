@@ -7,21 +7,21 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedexapp.databinding.PokemonListItemBinding
-import com.example.pokedexapp.domain.models.Pokemon
+import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.presentation.utils.downloadUrl
 
 class ListAdapter constructor(
     private val listener: Listener,
-): PagingDataAdapter<Pokemon, ListAdapter.ListAdapterHolder>(diffCallback) {
+): PagingDataAdapter<PokemonPart, ListAdapter.ListAdapterHolder>(diffCallback) {
 
 
     inner class ListAdapterHolder(val binding: PokemonListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private var pokemons: List<Pokemon> = emptyList()
+    private var pokemonParts: List<PokemonPart> = emptyList()
 
 
     interface Listener{
-        fun onClick(item: Pokemon)
+        fun onClick(item: PokemonPart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListAdapterHolder {
@@ -42,8 +42,8 @@ class ListAdapter constructor(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(items: List<Pokemon>){
-        this.pokemons = items
+    fun updateItems(items: List<PokemonPart>){
+        this.pokemonParts = items
         notifyDataSetChanged()
     }
 
@@ -51,12 +51,12 @@ class ListAdapter constructor(
 
 }
 
-private val diffCallback = object : DiffUtil.ItemCallback<Pokemon>(){
-    override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
+private val diffCallback = object : DiffUtil.ItemCallback<PokemonPart>(){
+    override fun areItemsTheSame(oldItem: PokemonPart, newItem: PokemonPart): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean {
+    override fun areContentsTheSame(oldItem: PokemonPart, newItem: PokemonPart): Boolean {
         return oldItem.id == newItem.id
     }
 
