@@ -1,22 +1,29 @@
 package com.example.pokedexapp.presentation.list
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentListBinding
+import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.models.PokemonPart
+import com.example.pokedexapp.presentation.filter_dialog.OrderDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ListFragment : Fragment(), ListAdapter.Listener {
+class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
 
     private val viewModel by viewModels<ListViewModel>()
     private val adapter = ListAdapter(this)
@@ -40,6 +47,23 @@ class ListFragment : Fragment(), ListAdapter.Listener {
         navController = findNavController()
         initView()
 
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return true
+            }
+        })
+
+        binding.filterButton.setOnClickListener {
+            val dialog = OrderDialog(this,OrderEnum.Name)
+            dialog.show(childFragmentManager,null)
+        }
+
+
+
         viewModel.loadData()
         observeData()
     }
@@ -52,9 +76,6 @@ class ListFragment : Fragment(), ListAdapter.Listener {
     }
 
     private fun observeData(){
-//        viewModel.data.observe(viewLifecycleOwner){data->
-//            adapter.updateItems(data)
-//        }
 
         viewModel.pagingData.observe(viewLifecycleOwner){pagingData->
            lifecycleScope.launch {
@@ -73,5 +94,9 @@ class ListFragment : Fragment(), ListAdapter.Listener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSelected(orderEnum: OrderEnum) {
+
     }
 }

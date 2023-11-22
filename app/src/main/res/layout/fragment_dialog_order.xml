@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/brand_background_12"
+    android:paddingHorizontal="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sort By:"
+        style="@style/MaterialAlertDialog.Material3.Title.Panel"
+        android:textAlignment="center"
+        android:textColor="@color/onBrandColor"
+        android:textStyle="bold"
+        />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        android:background="@drawable/on_brand_background_8"
+        >
+        <RadioButton
+            android:id="@+id/numberRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Number"
+            app:buttonTint="@color/brandColor"
+
+            />
+        <RadioButton
+            android:id="@+id/nameRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            app:buttonTint="@color/brandColor"
+            />
+    </RadioGroup>
+
+
+</LinearLayout>

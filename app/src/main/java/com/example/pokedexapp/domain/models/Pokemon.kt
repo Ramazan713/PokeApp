@@ -1,5 +1,7 @@
 package com.example.pokedexapp.domain.models
 
+import com.example.pokedexapp.domain.extensions.fillWith
+
 data class Pokemon(
     val id: Int,
     val name: String,
@@ -18,5 +20,11 @@ data class Pokemon(
 
     val heightInMetre: Float get() = height / 10f
     val weightInKg get() = weight / 10f
+
+    val idWithHash: String get() = getIdWithHash(id)
+
+    companion object{
+        fun getIdWithHash(id: Int) = "#${id.fillWith(3)}"
+    }
 
 }

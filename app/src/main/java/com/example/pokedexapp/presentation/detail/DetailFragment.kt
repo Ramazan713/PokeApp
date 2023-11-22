@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.marginRight
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentDetailBinding
 import com.example.pokedexapp.databinding.FragmentListBinding
@@ -50,6 +51,11 @@ class DetailFragment : Fragment() {
         arguments?.getInt("pokemonId")?.let { pokemonId->
             viewModel.loadData(pokemonId)
         }
+
+        binding.barNavigateBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         observeData()
     }
 
@@ -58,6 +64,9 @@ class DetailFragment : Fragment() {
             if(data == null) return@observe
             val pokemon = data.pokemon
             val color = data.baseColor
+
+            binding.barTitle.text = pokemon.name
+            binding.barNumber.text = pokemon.idWithHash
 
             binding.root.backgroundTintList = ColorStateList.valueOf(color)
             binding.image.downloadUrl(pokemon.imageUrl)
@@ -68,7 +77,7 @@ class DetailFragment : Fragment() {
                 data.types.forEach { type->
                     val chip = Chip(requireContext()).apply {
                         text = type.name
-                        setTextColor(Color.WHITE)
+                        setTextColor(requireContext().getColor(R.color.onBrandColor))
                         chipBackgroundColor = ColorStateList.valueOf(Colors.getColor(type.name))
                         chipStrokeWidth = 0f
                     }

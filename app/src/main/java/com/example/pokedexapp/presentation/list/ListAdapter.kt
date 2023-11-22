@@ -7,6 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedexapp.databinding.PokemonListItemBinding
+import com.example.pokedexapp.domain.models.Pokemon
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.presentation.utils.downloadUrl
 
@@ -16,8 +17,6 @@ class ListAdapter constructor(
 
 
     inner class ListAdapterHolder(val binding: PokemonListItemBinding) : RecyclerView.ViewHolder(binding.root)
-
-    private var pokemonParts: List<PokemonPart> = emptyList()
 
 
     interface Listener{
@@ -32,7 +31,7 @@ class ListAdapter constructor(
     override fun onBindViewHolder(holder: ListAdapterHolder, position: Int) {
         val item = getItem(position) ?: return
         holder.binding.let { binding->
-            binding.itemId.text = item.id.toString()
+            binding.itemId.text = Pokemon.getIdWithHash(item.id)
             binding.itemName.text = item.name
             binding.itemImage.downloadUrl(item.imageUrl)
             binding.root.setOnClickListener {
@@ -40,14 +39,6 @@ class ListAdapter constructor(
             }
         }
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateItems(items: List<PokemonPart>){
-        this.pokemonParts = items
-        notifyDataSetChanged()
-    }
-
-
 
 }
 
