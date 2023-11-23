@@ -122,6 +122,7 @@ class DetailAdapter constructor(
             l.spdProgressBar.progressBar.setData(color,pokemon.speed)
         }
 
+        binding.root.isVisible = true
     }
 }
 

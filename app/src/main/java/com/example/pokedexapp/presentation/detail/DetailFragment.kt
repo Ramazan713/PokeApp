@@ -80,9 +80,9 @@ class DetailFragment : Fragment(), DetailAdapter.Listener {
 
         viewModel.pos.observe(viewLifecycleOwner){pos->
             binding.viewPager.postDelayed({
+                binding.progressBar.isVisible = false
                 binding.viewPager.setCurrentItem(pos,false)
             },50)
-
         }
     }
 
