@@ -4,6 +4,7 @@
 - Kotlin
 - MVVM
 - Clean Architecture
+- Dependency Injection With Hilt
 - Room
 - Paging 3
 - ViewPager2
