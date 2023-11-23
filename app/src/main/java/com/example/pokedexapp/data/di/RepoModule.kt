@@ -1,5 +1,6 @@
 package com.example.pokedexapp.data.di
 
+import android.content.SharedPreferences
 import com.example.pokedexapp.data.local.AppDatabase
 import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
@@ -9,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 
@@ -19,6 +21,14 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providePokemonRepo(apiHelper: PokeApiServiceHelper,db: AppDatabase): PokemonRepo =
-        PokemonRepoImpl(apiHelper,db)
+    fun providePokemonRepo(
+        apiHelper: PokeApiServiceHelper,
+        db: AppDatabase,
+        sharedPreferences: SharedPreferences,
+    ): PokemonRepo =
+        PokemonRepoImpl(
+            apiHelper = apiHelper,
+            db = db,
+            sharedPreferences = sharedPreferences,
+        )
 }

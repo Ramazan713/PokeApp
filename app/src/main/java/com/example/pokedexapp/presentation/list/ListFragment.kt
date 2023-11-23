@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentListBinding
@@ -20,6 +22,7 @@ import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.presentation.filter_dialog.OrderDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -82,6 +85,12 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
            }
         }
         viewModel.sortBy.observe(viewLifecycleOwner){}
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadState->
+                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
     }
 
     override fun onClick(item: PokemonPart) {

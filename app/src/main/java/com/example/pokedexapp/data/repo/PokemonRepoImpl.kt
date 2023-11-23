@@ -1,5 +1,6 @@
 package com.example.pokedexapp.data.repo
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.paging.ExperimentalPagingApi
@@ -11,7 +12,6 @@ import androidx.paging.map
 import com.example.pokedexapp.data.local.AppDatabase
 import com.example.pokedexapp.data.mapper.toPokemonDetail
 import com.example.pokedexapp.data.mapper.toPokemonPart
-import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.PokeRemoteMediator
 import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
 import com.example.pokedexapp.domain.constants.K
@@ -20,13 +20,13 @@ import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.repo.PokemonRepo
-import com.example.pokedexapp.domain.utils.Resource
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 class PokemonRepoImpl @Inject constructor(
     private val apiHelper: PokeApiServiceHelper,
-    private val db: AppDatabase
+    private val db: AppDatabase,
+    private val sharedPreferences: SharedPreferences,
 ): PokemonRepo {
     override fun getPokemonDetailsPaging(): LiveData<PagingData<PokemonDetail>> {
         val pager = Pager(
@@ -48,10 +48,16 @@ class PokemonRepoImpl @Inject constructor(
 
         val pager = Pager(
             config = PagingConfig(
-                pageSize = K.pageSize
+                pageSize = K.pageSize,
             ),
             initialKey = 1,
-            remoteMediator = PokeRemoteMediator(db,K.pageSize,apiHelper),
+            remoteMediator = PokeRemoteMediator(
+                db = db,
+                pageSize = K.pageSize,
+                pokeApiServiceHelper = apiHelper,
+                sharedPreferences = sharedPreferences,
+                initExtraPageCount = 2,
+            ),
             pagingSourceFactory = {
                 when(opt.orderEnum){
                     OrderEnum.Number -> {
