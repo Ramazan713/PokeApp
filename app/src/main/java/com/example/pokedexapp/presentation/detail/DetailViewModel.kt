@@ -1,29 +1,32 @@
 package com.example.pokedexapp.presentation.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.repo.PokemonRepo
+import com.example.pokedexapp.domain.use_cases.GetPokemonsPartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val pokemonRepo: PokemonRepo
+    private val pokemonRepo: PokemonRepo,
 ): ViewModel(){
 
-    private val mutablePokemon = MutableLiveData<PokemonDetail?>(null)
-    val pokemonData: LiveData<PokemonDetail?> = mutablePokemon
+    private val mutablePos = MutableLiveData<Int>(0)
+    val pos: LiveData<Int> = mutablePos
 
+    val pagingData = pokemonRepo.getPokemonDetailsPaging().cachedIn(viewModelScope)
 
-    fun loadData(id: Int){
+    fun loadPos(id: Int){
         viewModelScope.launch {
-            mutablePokemon.value = pokemonRepo.getPokemonDetail(id)
+            mutablePos.value = pokemonRepo.getPokemonPositionById(id)
         }
     }
-
-
 }

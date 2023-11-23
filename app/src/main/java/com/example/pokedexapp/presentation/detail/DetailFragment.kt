@@ -16,23 +16,31 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.doOnAttach
+import androidx.core.view.isVisible
 import androidx.core.view.marginRight
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentDetailBinding
 import com.example.pokedexapp.databinding.FragmentListBinding
 import com.example.pokedexapp.domain.extensions.fillWith
+import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.utils.Colors
 import com.example.pokedexapp.presentation.utils.downloadUrl
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class DetailFragment : Fragment() {
+class DetailFragment : Fragment(), DetailAdapter.Listener {
 
     private val viewModel by viewModels<DetailViewModel>()
+    private lateinit var adapter: DetailAdapter
 
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
@@ -48,83 +56,51 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = DetailAdapter(requireContext(),this)
+
         arguments?.getInt("pokemonId")?.let { pokemonId->
-            viewModel.loadData(pokemonId)
+            viewModel.loadPos(pokemonId)
         }
 
-        binding.barNavigateBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
+        initViews()
         observeData()
     }
 
+    private fun initViews(){
+        binding.viewPager.adapter = adapter
+    }
+
     private fun observeData(){
-        viewModel.pokemonData.observe(viewLifecycleOwner){data->
-            if(data == null) return@observe
-            val pokemon = data.pokemon
-            val color = data.baseColor
-
-            binding.barTitle.text = pokemon.name
-            binding.barNumber.text = pokemon.idWithHash
-
-            binding.root.backgroundTintList = ColorStateList.valueOf(color)
-            binding.image.downloadUrl(pokemon.imageUrl)
-            binding.card.baseStateText.setTextColor(color)
-            binding.card.aboutText.setTextColor(color)
-
-            binding.card.chipLayout.let { l ->
-                data.types.forEach { type->
-                    val chip = Chip(requireContext()).apply {
-                        text = type.name
-                        setTextColor(requireContext().getColor(R.color.onBrandColor))
-                        chipBackgroundColor = ColorStateList.valueOf(Colors.getColor(type.name))
-                        chipStrokeWidth = 0f
-                    }
-                    l.addView(chip,MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
-                        .apply { setMargins(0,0,16,0) })
-                }
+        viewModel.pagingData.observe(viewLifecycleOwner){data->
+            lifecycleScope.launch {
+                adapter.submitData(data)
             }
+        }
 
-            binding.card.physicalInfo.let { info->
-                info.weightText.text = "${pokemon.weightInKg} kg"
-                info.heightText.text = "${pokemon.heightInMetre} kg"
-                info.moveText.text = data.moves.joinToString("\n") { it.name }
-            }
+        viewModel.pos.observe(viewLifecycleOwner){pos->
+            binding.viewPager.postDelayed({
+                binding.viewPager.setCurrentItem(pos,false)
+            },50)
 
-            binding.card.statsDetail.let { l ->
-                l.hpText.text = pokemon.hp.fillWith()
-                l.atkText.text = pokemon.attack.fillWith()
-                l.defText.text = pokemon.defence.fillWith()
-                l.satkText.text = pokemon.specialAttack.fillWith()
-                l.sdefText.text = pokemon.specialDefense.fillWith()
-                l.spdText.text = pokemon.speed.fillWith()
+        }
+    }
 
-                l.hpTitle.setTextColor(color)
-                l.atkTitle.setTextColor(color)
-                l.defTitle.setTextColor(color)
-                l.satkTitle.setTextColor(color)
-                l.sdefTitle.setTextColor(color)
-                l.spdTitle.setTextColor(color)
+    override fun onNavigateBackClick() {
+        findNavController().navigateUp()
+    }
 
-                l.hpProgressBar.progressBar.setData(color,pokemon.hp)
-                l.atkProgressBar.progressBar.setData(color,pokemon.attack)
-                l.defProgressBar.progressBar.setData(color,pokemon.defence)
-                l.satkProgressBar.progressBar.setData(color,pokemon.specialAttack)
-                l.sdefProgressBar.progressBar.setData(color,pokemon.specialDefense)
-                l.spdProgressBar.progressBar.setData(color,pokemon.speed)
-            }
+    override fun onPrevious(item: PokemonDetail) {
+        binding.viewPager.let { pager->
+            pager.currentItem = pager.currentItem - 1
+        }
+    }
 
+    override fun onNext(item: PokemonDetail) {
+        binding.viewPager.let { pager->
+            pager.currentItem = pager.currentItem + 1
         }
     }
 }
 
-
-private fun ProgressBar.setData(color: Int, progress: Int){
-    val drawable = this.progressDrawable as LayerDrawable
-    drawable.findDrawableByLayerId(R.id.progressBackgroundLayer).setTint(ColorUtils.setAlphaComponent(color,50))
-    drawable.findDrawableByLayerId(R.id.progressLayer).setTint(color)
-
-    this.setProgress(progress,true)
-}
 

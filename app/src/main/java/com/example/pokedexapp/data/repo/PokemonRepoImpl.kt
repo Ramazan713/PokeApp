@@ -28,6 +28,21 @@ class PokemonRepoImpl @Inject constructor(
     private val apiHelper: PokeApiServiceHelper,
     private val db: AppDatabase
 ): PokemonRepo {
+    override fun getPokemonDetailsPaging(): LiveData<PagingData<PokemonDetail>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = K.pageSize
+            ),
+            initialKey = 1,
+            pagingSourceFactory = {
+                db.pokemonDao().getPokemonDetails()
+            }
+        )
+        return pager.liveData.map {pagingData->
+            pagingData.map { it.toPokemonDetail() }
+        }
+    }
+
     @OptIn(ExperimentalPagingApi::class)
     override fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>> {
 
@@ -80,8 +95,8 @@ class PokemonRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPokemonDetail(id: Int): PokemonDetail? {
-        return db.pokemonDao().getPokemonDetailById(id)?.toPokemonDetail()
+    override suspend fun getPokemonPositionById(id: Int): Int {
+        return db.pokemonDao().getPokemonPositionById(id) ?: 0
     }
 
 
