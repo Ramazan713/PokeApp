@@ -18,19 +18,28 @@ interface PokemonDoa {
     suspend fun insertPokemons(pokemonEntities: List<PokemonEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPokemon(pokemonEntity: PokemonEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoves(moves: List<MovesEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTypes(types: List<PokemonTypeEntity>)
 
-    @Query("select * from pokemons order by pokemonId")
-    fun getPokemonDetails():PagingSource<Int,PokemonDetailRelation>
+    @Query("select * from pokemons where remoteKey = :remoteKey order by pokemonId")
+    fun getPokemonDetails(
+        remoteKey: String
+    ):PagingSource<Int,PokemonDetailRelation>
 
-    @Query("select * from pokemons order by pokemonId")
-    fun getPokemonsOrderById(): PagingSource<Int,PokemonEntity>
+    @Query("select * from pokemons where remoteKey = :remoteKey order by pokemonId")
+    fun getPokemonsOrderById(
+        remoteKey: String
+    ): PagingSource<Int,PokemonEntity>
 
-    @Query("select * from pokemons order by name")
-    fun getPokemonsOrderByName(): PagingSource<Int,PokemonEntity>
+    @Query("select * from pokemons where remoteKey = :remoteKey order by name")
+    fun getPokemonsOrderByName(
+        remoteKey: String
+    ): PagingSource<Int,PokemonEntity>
 
     @Query("""
         select * from pokemons where 
@@ -53,10 +62,7 @@ interface PokemonDoa {
     ): PagingSource<Int,PokemonEntity>
 
 
-    @Query("select page from pokemons order by id desc limit 1")
-    suspend fun getLastPage(): Int?
-
-    @Query("delete from pokemons")
-    suspend fun deleteAllPokemons()
+    @Query("delete from pokemons where remoteKey = :remoteKey")
+    suspend fun deletePokemonsByRemoteKey(remoteKey: String)
 
 }

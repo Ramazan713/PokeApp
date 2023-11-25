@@ -35,7 +35,7 @@ class PokemonRepoImpl @Inject constructor(
             ),
             initialKey = 1,
             pagingSourceFactory = {
-                db.pokemonDao().getPokemonDetails()
+                db.pokemonDao().getPokemonDetails(LoadOpt.getRemoteKeyLabel("",OrderEnum.Number))
             }
         )
         return pager.liveData.map {pagingData->
@@ -57,20 +57,19 @@ class PokemonRepoImpl @Inject constructor(
                 pokeApiServiceHelper = apiHelper,
                 sharedPreferences = sharedPreferences,
                 initExtraPageCount = 2,
+                loadOpt = opt
             ),
             pagingSourceFactory = {
                 when(opt.orderEnum){
                     OrderEnum.Number -> {
-                        db.pokemonDao().getPokemonsOrderById()
+                        db.pokemonDao().getPokemonsOrderById(opt.remoteKeyLabel)
                     }
                     OrderEnum.Name -> {
-                        db.pokemonDao().getPokemonsOrderByName()
+                        db.pokemonDao().getPokemonsOrderByName(opt.remoteKeyLabel)
                     }
                 }
-
             }
         )
-
         return pager.liveData.map {pagingData->
             pagingData.map { it.toPokemonPart() }
         }

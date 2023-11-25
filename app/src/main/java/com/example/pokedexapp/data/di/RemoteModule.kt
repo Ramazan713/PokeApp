@@ -1,11 +1,9 @@
 package com.example.pokedexapp.data.di
 
-import android.app.Application
 import com.example.pokedexapp.data.remote.GraphQlPokeApi
 import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.services.GraphQlPokeApiServiceHelperImpl
 import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
-import com.example.pokedexapp.data.remote.services.PokeApiServiceHelperImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

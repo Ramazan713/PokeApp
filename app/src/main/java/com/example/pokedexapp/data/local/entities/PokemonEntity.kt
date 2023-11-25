@@ -6,15 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Pokemons",
-    indices = [Index("pokemonId", unique = true)]
 )
 data class PokemonEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
-
     val pokemonId: Int,
     val name: String,
-    val page: Int,
+    val remoteKey: String,
     val imageUrl: String,
     val height: Int,
     val weight: Int,

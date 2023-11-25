@@ -20,7 +20,9 @@ fun PokemonV2Pokemonstat.toStatsInfo(): StatsInfo{
     )
 }
 
-fun PokemonV2Pokemon.toPokemonEntity(page: Int): PokemonEntity{
+fun PokemonV2Pokemon.toPokemonEntity(
+    remoteKey: String
+): PokemonEntity{
 
     val statsResult = StatsUtil.from(pokemon_v2_pokemonstats.map { it.toStatsInfo() })
 
@@ -30,7 +32,7 @@ fun PokemonV2Pokemon.toPokemonEntity(page: Int): PokemonEntity{
         name = name,
         weight = weight,
         height = height,
-        page = page,
+        remoteKey = remoteKey,
         imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png",
         flavorText = pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesflavortexts.firstOrNull()?.flavor_text ?: "",
         colorName = pokemon_v2_pokemonspecy.pokemon_v2_pokemoncolor.name,

@@ -12,9 +12,6 @@ class GetPokemonsPartUseCase @Inject constructor(
 ) {
 
     operator fun invoke(opt: LoadOpt): LiveData<PagingData<PokemonPart>>{
-        if(opt.query.isBlank()){
-            return pokemonRepo.getPokemonsPaging(opt)
-        }
-        return pokemonRepo.searchPokemons(opt)
+        return pokemonRepo.getPokemonsPaging(opt)
     }
 }

@@ -9,6 +9,8 @@ import com.example.pokedexapp.data.mapper.toPokemonMove
 import com.example.pokedexapp.data.mapper.toPokemonType
 import com.example.pokedexapp.data.remote.GraphQlPokeApi
 import com.example.pokedexapp.data.remote.dto.pokemon_graphql.GraphQlPokeRequest
+import com.example.pokedexapp.domain.enums.OrderEnum
+import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.utils.Resource
 import javax.inject.Inject
 
@@ -16,47 +18,100 @@ class GraphQlPokeApiServiceHelperImpl @Inject constructor(
     private val api: GraphQlPokeApi
 ): PokeApiServiceHelper {
 
-    override suspend fun getPokeEntities(page: Int, pageSize: Int): Resource<PokeApiResponse> {
-        val offset = (page - 1) * pageSize
+    override suspend fun getPokeEntities(loadOpt: LoadOpt, page: Int, pageSize: Int): Resource<PokeApiResponse> {
+        return try {
+            val offset = (page - 1) * pageSize
 
-        val response = api.getPokeData(getRequest(offset, pageSize))
-        val responseBody = response.body()
+            val response = api.getPokeData(getRequest(loadOpt, offset, pageSize))
+            val responseBody = response.body()
 
-        if(!response.isSuccessful || responseBody==null){
-            return Resource.Error(response.message())
-        }
-        val pokemonsArr = mutableListOf<PokemonEntity>()
-        val typesArr = mutableListOf<PokemonTypeEntity>()
-        val movesArr = mutableListOf<MovesEntity>()
-
-        responseBody.data.pokemon_v2_pokemonspecies.forEach {rs->
-            rs.pokemon_v2_pokemons.forEach {pokemonData->
-
-                val pokemonEntity = pokemonData.toPokemonEntity(page)
-
-                val moveEntities = pokemonData.pokemon_v2_pokemonmoves.mapIndexed { index, it -> it.toPokemonMove(index + 1,pokemonData.id) }
-                val typeEntities = pokemonData.pokemon_v2_pokemontypes.map { it.toPokemonType(pokemonData.id) }
-
-                pokemonsArr.add(pokemonEntity)
-                typesArr.addAll(typeEntities)
-                movesArr.addAll(moveEntities)
+            if(!response.isSuccessful || responseBody==null){
+                return Resource.Error(response.message())
             }
-        }
+            val dataArr = mutableListOf<PokeApiResponseData>()
 
 
-        return Resource.Success(
-            PokeApiResponse(
-                pokemonEntities = pokemonsArr,
-                typeEntities = typesArr,
-                moveEntities = movesArr,
-                endOfPaginationReached = pokemonsArr.isEmpty()
+            responseBody.data.pokemon_v2_pokemonspecies.forEach {rs->
+                rs.pokemon_v2_pokemons.forEach {pokemonData->
+
+                    val pokemonEntity = pokemonData.toPokemonEntity(loadOpt.remoteKeyLabel)
+
+                    val moveEntities = pokemonData.pokemon_v2_pokemonmoves.mapIndexed { index, it -> it.toPokemonMove(index + 1,0) }
+                    val typeEntities = pokemonData.pokemon_v2_pokemontypes.map { it.toPokemonType(0) }
+
+                    val data = PokeApiResponseData(
+                        pokemonEntity, typeEntities, moveEntities
+                    )
+                    dataArr.add(data)
+                }
+            }
+
+
+            return Resource.Success(
+                PokeApiResponse(
+                    data = dataArr,
+                    endOfPaginationReached = dataArr.isEmpty()
+                )
             )
-        )
+        }catch (e: Exception){
+            return Resource.Error(e.localizedMessage)
+        }
     }
 
 
 
-    private fun getRequest(offset: Int, pageSize: Int): GraphQlPokeRequest{
+    private fun getRequest(loadOpt: LoadOpt, offset: Int, pageSize: Int): GraphQlPokeRequest{
+        if(loadOpt.query.isNotBlank()){
+            return when(loadOpt.orderEnum){
+                OrderEnum.Number -> {
+                    searchRequestOrderByNumber(loadOpt.query,offset, pageSize)
+                }
+
+                OrderEnum.Name -> {
+                    searchRequestOrderByName(loadOpt.query,offset, pageSize)
+                }
+            }
+        }
+        return when(loadOpt.orderEnum){
+            OrderEnum.Number -> {
+                requestOrderByNumber(offset, pageSize)
+            }
+            OrderEnum.Name -> {
+                requestOrderByName(offset, pageSize)
+            }
+        }
+    }
+
+
+    private fun searchRequestOrderByName(query: String, offset: Int, pageSize: Int): GraphQlPokeRequest{
+        return GraphQlPokeRequest(
+            operationName = "samplePokeAPIQuery",
+            query = """
+                query samplePokeAPIQuery {
+                  pokemon_v2_pokemonspecies(order_by: { name: asc}, limit: $pageSize, offset: $offset, where: {name: {_ilike: "%$query%"}}) {
+                   	...getPokemons
+                  }
+                }
+                ${getFragments()}
+            """.trimIndent()
+        )
+    }
+
+    private fun searchRequestOrderByNumber(query: String, offset: Int, pageSize: Int): GraphQlPokeRequest{
+        return GraphQlPokeRequest(
+            operationName = "samplePokeAPIQuery",
+            query = """
+                query samplePokeAPIQuery {
+                  pokemon_v2_pokemonspecies(order_by: { id: asc}, limit: $pageSize, offset: $offset, where: {name: {_ilike: "%$query%"}}) {
+                   	...getPokemons
+                  }
+                }
+                ${getFragments()}
+            """.trimIndent()
+        )
+    }
+
+    private fun requestOrderByNumber(offset: Int, pageSize: Int): GraphQlPokeRequest{
         return GraphQlPokeRequest(
             operationName = "samplePokeAPIQuery",
             query = """
@@ -69,6 +124,22 @@ class GraphQlPokeApiServiceHelperImpl @Inject constructor(
             """.trimIndent()
         )
     }
+
+    private fun requestOrderByName(offset: Int, pageSize: Int): GraphQlPokeRequest{
+        return GraphQlPokeRequest(
+            operationName = "samplePokeAPIQuery",
+            query = """
+                query samplePokeAPIQuery {
+                  pokemon_v2_pokemonspecies(order_by: { name: asc}, limit: $pageSize, offset: $offset) {
+                   	...getPokemons
+                  }
+                }
+                ${getFragments()}
+            """.trimIndent()
+        )
+    }
+
+
 
     private fun getFragments(): String{
         return """

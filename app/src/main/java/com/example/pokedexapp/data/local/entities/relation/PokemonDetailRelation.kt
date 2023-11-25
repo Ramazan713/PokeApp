@@ -13,14 +13,14 @@ data class PokemonDetailRelation(
 
     @Relation(
         entity = MovesEntity::class,
-        parentColumn = "pokemonId",
+        parentColumn = "id",
         entityColumn = "pokemonId"
     )
     val moves: List<MovesEntity>,
 
     @Relation(
         entity = PokemonTypeEntity::class,
-        parentColumn = "pokemonId",
+        parentColumn = "id",
         entityColumn = "pokemonId"
     )
     val types: List<PokemonTypeEntity>,

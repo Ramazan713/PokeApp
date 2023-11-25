@@ -53,7 +53,7 @@ class ListViewModel @Inject constructor(
     private fun search(query: String){
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(300)
+            delay(700)
             mutableOpt.update {
                 it.copy(query = query)
             }

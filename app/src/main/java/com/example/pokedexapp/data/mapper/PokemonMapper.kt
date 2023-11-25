@@ -21,7 +21,7 @@ fun StatDto.toStatsInfo(): StatsInfo{
 
 fun PokemonDto.toPokemonEntity(
     id: Int,
-    page: Int,
+    remoteKey: String,
     detailResult: PokemonDetailResponseDto,
     speciesResult: PokemonSpeciesResponseDto
 ): PokemonEntity{
@@ -43,7 +43,7 @@ fun PokemonDto.toPokemonEntity(
         specialAttack = stats.specialAttack,
         specialDefense = stats.specialDefense,
         speed = stats.speed,
-        page = page
+        remoteKey = remoteKey
     )
 }
 
