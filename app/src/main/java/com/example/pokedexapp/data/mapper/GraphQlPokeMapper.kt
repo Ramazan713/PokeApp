@@ -25,7 +25,8 @@ fun PokemonV2Pokemon.toPokemonEntity(page: Int): PokemonEntity{
     val statsResult = StatsUtil.from(pokemon_v2_pokemonstats.map { it.toStatsInfo() })
 
     return PokemonEntity(
-        id = id,
+        id = null,
+        pokemonId = id,
         name = name,
         weight = weight,
         height = height,

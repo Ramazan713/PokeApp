@@ -20,7 +20,7 @@ class ListAdapter constructor(
 
 
     interface Listener{
-        fun onClick(item: PokemonPart)
+        fun onClick(item: PokemonPart, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListAdapterHolder {
@@ -31,11 +31,11 @@ class ListAdapter constructor(
     override fun onBindViewHolder(holder: ListAdapterHolder, position: Int) {
         val item = getItem(position) ?: return
         holder.binding.let { binding->
-            binding.itemId.text = Pokemon.getIdWithHash(item.id)
+            binding.itemId.text = Pokemon.getIdWithHash(item.pokemonId)
             binding.itemName.text = item.name
             binding.itemImage.downloadUrl(item.imageUrl)
             binding.root.setOnClickListener {
-                listener.onClick(item)
+                listener.onClick(item,position)
             }
         }
     }
@@ -44,11 +44,11 @@ class ListAdapter constructor(
 
 private val diffCallback = object : DiffUtil.ItemCallback<PokemonPart>(){
     override fun areItemsTheSame(oldItem: PokemonPart, newItem: PokemonPart): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.pokemonId == newItem.pokemonId
     }
 
     override fun areContentsTheSame(oldItem: PokemonPart, newItem: PokemonPart): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.pokemonId == newItem.pokemonId
     }
 
 }

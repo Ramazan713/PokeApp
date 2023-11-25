@@ -93,8 +93,8 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
         }
     }
 
-    override fun onClick(item: PokemonPart) {
-        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(item.id)
+    override fun onClick(item: PokemonPart,position: Int) {
+        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(position)
         navController.navigate(destination)
     }
 

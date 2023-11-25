@@ -16,6 +16,4 @@ interface PokemonRepo {
 
     fun searchPokemons(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
 
-    suspend fun getPokemonPositionById(id: Int): Int
-
 }

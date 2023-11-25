@@ -49,8 +49,8 @@ class PokeRemoteMediator constructor(
                 LoadType.PREPEND ->
                     return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(endOfPaginationReached = true)
-                    lastItem.page + 1
+                    val lastItem = db.pokemonDao().getLastPage() ?: return MediatorResult.Success(endOfPaginationReached = true)
+                    lastItem + 1
                 }
             } ?: 1
 

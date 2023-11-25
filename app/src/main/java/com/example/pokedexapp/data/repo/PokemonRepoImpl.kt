@@ -101,9 +101,4 @@ class PokemonRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPokemonPositionById(id: Int): Int {
-        return db.pokemonDao().getPokemonPositionById(id) ?: 0
-    }
-
-
 }

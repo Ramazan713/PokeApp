@@ -59,8 +59,11 @@ class DetailFragment : Fragment(), DetailAdapter.Listener {
 
         adapter = DetailAdapter(requireContext(),this)
 
-        arguments?.getInt("pokemonId")?.let { pokemonId->
-            viewModel.loadPos(pokemonId)
+        arguments?.getInt("position")?.let { pos->
+            binding.viewPager.postDelayed({
+                binding.progressBar.isVisible = false
+                binding.viewPager.setCurrentItem(pos,false)
+            },50)
         }
 
         initViews()
@@ -76,13 +79,6 @@ class DetailFragment : Fragment(), DetailAdapter.Listener {
             lifecycleScope.launch {
                 adapter.submitData(data)
             }
-        }
-
-        viewModel.pos.observe(viewLifecycleOwner){pos->
-            binding.viewPager.postDelayed({
-                binding.progressBar.isVisible = false
-                binding.viewPager.setCurrentItem(pos,false)
-            },50)
         }
     }
 

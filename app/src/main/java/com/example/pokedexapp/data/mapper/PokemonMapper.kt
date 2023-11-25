@@ -29,7 +29,8 @@ fun PokemonDto.toPokemonEntity(
     val stats = StatsUtil.from(detailResult.stats.map { it.toStatsInfo() })
 
     return PokemonEntity(
-        id = id,
+        id = null,
+        pokemonId = id,
         name = name,
         imageUrl = detailResult.sprites.other.officialArtwork.front_default,
         height = detailResult.height,
@@ -50,13 +51,13 @@ fun PokemonDto.toPokemonEntity(
 
 fun PokemonEntity.toPokemonPart(): PokemonPart {
     return PokemonPart(
-        id, name, imageUrl
+        pokemonId, name, imageUrl
     )
 }
 
 fun PokemonEntity.toPokemon(): Pokemon {
     return Pokemon(
-        id = id,
+        pokemonId = pokemonId,
         name = name,
         imageUrl = imageUrl,
         height = height,

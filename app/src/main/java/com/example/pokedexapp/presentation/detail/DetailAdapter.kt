@@ -137,11 +137,11 @@ private fun ProgressBar.setData(color: Int, progress: Int){
 
 private val diffCallback = object : DiffUtil.ItemCallback<PokemonDetail>(){
     override fun areItemsTheSame(oldItem: PokemonDetail, newItem: PokemonDetail): Boolean {
-        return oldItem.pokemon.id == newItem.pokemon.id
+        return oldItem.pokemon.pokemonId == newItem.pokemon.pokemonId
     }
 
     override fun areContentsTheSame(oldItem: PokemonDetail, newItem: PokemonDetail): Boolean {
-        return oldItem.pokemon.id == newItem.pokemon.id
+        return oldItem.pokemon.pokemonId == newItem.pokemon.pokemonId
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.pokedexapp.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -10,7 +11,7 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = PokemonEntity::class,
             childColumns = ["pokemonId"],
-            parentColumns = ["id"],
+            parentColumns = ["pokemonId"],
             onDelete = ForeignKey.CASCADE
         )
     ]

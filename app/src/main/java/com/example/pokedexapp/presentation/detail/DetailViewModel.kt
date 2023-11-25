@@ -19,14 +19,6 @@ class DetailViewModel @Inject constructor(
     private val pokemonRepo: PokemonRepo,
 ): ViewModel(){
 
-    private val mutablePos = MutableLiveData<Int>(0)
-    val pos: LiveData<Int> = mutablePos
-
     val pagingData = pokemonRepo.getPokemonDetailsPaging().cachedIn(viewModelScope)
 
-    fun loadPos(id: Int){
-        viewModelScope.launch {
-            mutablePos.value = pokemonRepo.getPokemonPositionById(id)
-        }
-    }
 }

@@ -23,10 +23,10 @@ interface PokemonDoa {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTypes(types: List<PokemonTypeEntity>)
 
-    @Query("select * from pokemons")
+    @Query("select * from pokemons order by pokemonId")
     fun getPokemonDetails():PagingSource<Int,PokemonDetailRelation>
 
-    @Query("select * from pokemons order by id")
+    @Query("select * from pokemons order by pokemonId")
     fun getPokemonsOrderById(): PagingSource<Int,PokemonEntity>
 
     @Query("select * from pokemons order by name")
@@ -36,7 +36,7 @@ interface PokemonDoa {
         select * from pokemons where 
         id like :query or
         name like :query
-        order by id
+        order by pokemonId
     """)
     fun searchPokemonsOrderById(
         query: String
@@ -52,9 +52,9 @@ interface PokemonDoa {
         query: String
     ): PagingSource<Int,PokemonEntity>
 
-    @Query("select count(*) from pokemons where id < :id")
-    suspend fun getPokemonPositionById(id: Int): Int?
 
+    @Query("select page from pokemons order by id desc limit 1")
+    suspend fun getLastPage(): Int?
 
     @Query("delete from pokemons")
     suspend fun deleteAllPokemons()

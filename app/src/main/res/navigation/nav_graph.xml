@@ -19,7 +19,7 @@
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
-            android:name="pokemonId"
+            android:name="position"
             app:argType="integer" />
     </fragment>
 </navigation>
