@@ -1,7 +1,6 @@
 package com.example.pokedexapp.data.di
 
 import com.example.pokedexapp.data.remote.GraphQlPokeApi
-import com.example.pokedexapp.data.remote.PokeApi
 import com.example.pokedexapp.data.remote.services.GraphQlPokeApiServiceHelperImpl
 import com.example.pokedexapp.data.remote.services.PokeApiServiceHelper
 import dagger.Module
@@ -14,16 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteModule {
-
-
-    @Provides
-    fun providePokemonApi(): PokeApi =
-        Retrofit.Builder()
-            .baseUrl("https://pokeapi.co/api/v2/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(PokeApi::class.java)
-
 
     @Provides
     fun provideGraphQlPokemonApi(): GraphQlPokeApi =

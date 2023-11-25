@@ -1,4 +1,4 @@
-package com.example.pokedexapp.data.remote.dto.pokemon_graphql
+package com.example.pokedexapp.data.remote.dto.pokemon_graphql.response
 
 data class PokemonV2PokemonspecyX(
     val pokemon_v2_pokemoncolor: PokemonV2Pokemoncolor,

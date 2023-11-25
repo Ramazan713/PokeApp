@@ -12,6 +12,7 @@ import com.example.pokedexapp.data.remote.dto.pokemon_graphql.GraphQlPokeRequest
 import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.utils.Resource
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class GraphQlPokeApiServiceHelperImpl @Inject constructor(
@@ -19,7 +20,7 @@ class GraphQlPokeApiServiceHelperImpl @Inject constructor(
 ): PokeApiServiceHelper {
 
     override suspend fun getPokeEntities(loadOpt: LoadOpt, page: Int, pageSize: Int): Resource<PokeApiResponse> {
-        return try {
+        try {
             val offset = (page - 1) * pageSize
 
             val response = api.getPokeData(getRequest(loadOpt, offset, pageSize))
@@ -45,15 +46,17 @@ class GraphQlPokeApiServiceHelperImpl @Inject constructor(
                     dataArr.add(data)
                 }
             }
-
-
             return Resource.Success(
                 PokeApiResponse(
                     data = dataArr,
                     endOfPaginationReached = dataArr.isEmpty()
                 )
             )
-        }catch (e: Exception){
+        }
+        catch (e: CancellationException){
+            throw e
+        }
+        catch (e: Exception){
             return Resource.Error(e.localizedMessage)
         }
     }

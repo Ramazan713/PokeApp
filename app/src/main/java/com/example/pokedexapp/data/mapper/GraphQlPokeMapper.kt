@@ -3,12 +3,10 @@ package com.example.pokedexapp.data.mapper
 import com.example.pokedexapp.data.local.entities.MovesEntity
 import com.example.pokedexapp.data.local.entities.PokemonEntity
 import com.example.pokedexapp.data.local.entities.PokemonTypeEntity
-import com.example.pokedexapp.data.remote.dto.pokemon_graphql.Data
-import com.example.pokedexapp.data.remote.dto.pokemon_graphql.PokemonV2Pokemon
-import com.example.pokedexapp.data.remote.dto.pokemon_graphql.PokemonV2Pokemonmove
-import com.example.pokedexapp.data.remote.dto.pokemon_graphql.PokemonV2Pokemonstat
-import com.example.pokedexapp.data.remote.dto.pokemon_graphql.PokemonV2Pokemontype
-import com.example.pokedexapp.data.remote.services.PokeApiResponse
+import com.example.pokedexapp.data.remote.dto.pokemon_graphql.response.PokemonV2Pokemon
+import com.example.pokedexapp.data.remote.dto.pokemon_graphql.response.PokemonV2Pokemonmove
+import com.example.pokedexapp.data.remote.dto.pokemon_graphql.response.PokemonV2Pokemonstat
+import com.example.pokedexapp.data.remote.dto.pokemon_graphql.response.PokemonV2Pokemontype
 import com.example.pokedexapp.data.utils.StatsInfo
 import com.example.pokedexapp.data.utils.StatsUtil
 

@@ -1,4 +1,4 @@
-package com.example.pokedexapp.data.remote.dto.pokemon_graphql
+package com.example.pokedexapp.data.remote.dto.pokemon_graphql.response
 
 data class PokemonV2Pokemonstat(
     val base_stat: Int,
