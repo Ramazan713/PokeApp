@@ -94,7 +94,11 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
     }
 
     override fun onClick(item: PokemonPart,position: Int) {
-        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(position)
+        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(
+            position = position,
+            query = viewModel.opt.value?.query ?: "",
+            orderEnumValue = viewModel.opt.value?.orderEnum?.valueEnum ?: OrderEnum.Number.valueEnum
+        )
         navController.navigate(destination)
     }
 

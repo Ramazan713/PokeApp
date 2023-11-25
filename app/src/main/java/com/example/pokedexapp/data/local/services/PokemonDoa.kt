@@ -27,9 +27,15 @@ interface PokemonDoa {
     suspend fun insertTypes(types: List<PokemonTypeEntity>)
 
     @Query("select * from pokemons where remoteKey = :remoteKey order by pokemonId")
-    fun getPokemonDetails(
+    fun getPokemonDetailsOrderById(
         remoteKey: String
     ):PagingSource<Int,PokemonDetailRelation>
+
+    @Query("select * from pokemons where remoteKey = :remoteKey order by name")
+    fun getPokemonDetailsOrderByName(
+        remoteKey: String
+    ):PagingSource<Int,PokemonDetailRelation>
+
 
     @Query("select * from pokemons where remoteKey = :remoteKey order by pokemonId")
     fun getPokemonsOrderById(
@@ -39,26 +45,6 @@ interface PokemonDoa {
     @Query("select * from pokemons where remoteKey = :remoteKey order by name")
     fun getPokemonsOrderByName(
         remoteKey: String
-    ): PagingSource<Int,PokemonEntity>
-
-    @Query("""
-        select * from pokemons where 
-        id like :query or
-        name like :query
-        order by pokemonId
-    """)
-    fun searchPokemonsOrderById(
-        query: String
-    ): PagingSource<Int,PokemonEntity>
-
-    @Query("""
-        select * from pokemons where 
-        id like :query or
-        name like :query
-        order by name
-    """)
-    fun searchPokemonsOrderByName(
-        query: String
     ): PagingSource<Int,PokemonEntity>
 
 

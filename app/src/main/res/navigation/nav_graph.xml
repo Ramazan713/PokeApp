@@ -21,5 +21,12 @@
         <argument
             android:name="position"
             app:argType="integer" />
+        <argument
+            android:name="orderEnumValue"
+            app:argType="integer" />
+        <argument
+            android:name="query"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 </navigation>

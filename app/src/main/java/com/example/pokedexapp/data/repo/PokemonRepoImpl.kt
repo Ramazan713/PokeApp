@@ -28,14 +28,21 @@ class PokemonRepoImpl @Inject constructor(
     private val db: AppDatabase,
     private val sharedPreferences: SharedPreferences,
 ): PokemonRepo {
-    override fun getPokemonDetailsPaging(): LiveData<PagingData<PokemonDetail>> {
+    override fun getPokemonDetailsPaging(opt: LoadOpt): LiveData<PagingData<PokemonDetail>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = K.pageSize
             ),
             initialKey = 1,
             pagingSourceFactory = {
-                db.pokemonDao().getPokemonDetails(LoadOpt.getRemoteKeyLabel("",OrderEnum.Number))
+                when(opt.orderEnum){
+                    OrderEnum.Number -> {
+                        db.pokemonDao().getPokemonDetailsOrderById(opt.remoteKeyLabel)
+                    }
+                    OrderEnum.Name -> {
+                        db.pokemonDao().getPokemonDetailsOrderByName(opt.remoteKeyLabel)
+                    }
+                }
             }
         )
         return pager.liveData.map {pagingData->
@@ -74,30 +81,4 @@ class PokemonRepoImpl @Inject constructor(
             pagingData.map { it.toPokemonPart() }
         }
     }
-
-    override fun searchPokemons(opt: LoadOpt): LiveData<PagingData<PokemonPart>> {
-
-        val query = "%${opt.query}%"
-
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = K.pageSize
-            ),
-            initialKey = 1,
-            pagingSourceFactory = {
-                when(opt.orderEnum){
-                    OrderEnum.Number -> {
-                        db.pokemonDao().searchPokemonsOrderById(query)
-                    }
-                    OrderEnum.Name -> {
-                        db.pokemonDao().searchPokemonsOrderByName(query)
-                    }
-                }
-            }
-        )
-        return pager.liveData.map {pagingData->
-            pagingData.map { it.toPokemonPart() }
-        }
-    }
-
 }

@@ -26,6 +26,7 @@ class ListViewModel @Inject constructor(
     private val getPokemonsUseCase: GetPokemonsPartUseCase
 ): ViewModel(){
     private val mutableOpt = MutableLiveData(LoadOpt())
+    val opt: LiveData<LoadOpt> = mutableOpt
 
     val sortBy: LiveData<OrderEnum> = mutableOpt.map { it.orderEnum }
 

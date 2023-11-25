@@ -9,11 +9,8 @@ import com.example.pokedexapp.domain.utils.Resource
 
 interface PokemonRepo {
 
-    fun getPokemonDetailsPaging(): LiveData<PagingData<PokemonDetail>>
+    fun getPokemonDetailsPaging(opt: LoadOpt): LiveData<PagingData<PokemonDetail>>
 
 
     fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
-
-    fun searchPokemons(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
-
 }

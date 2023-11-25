@@ -26,6 +26,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentDetailBinding
 import com.example.pokedexapp.databinding.FragmentListBinding
+import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.extensions.fillWith
 import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.utils.Colors
@@ -58,16 +59,23 @@ class DetailFragment : Fragment(), DetailAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = DetailAdapter(requireContext(),this)
-
-        arguments?.getInt("position")?.let { pos->
-            binding.viewPager.postDelayed({
-                binding.progressBar.isVisible = false
-                binding.viewPager.setCurrentItem(pos,false)
-            },50)
-        }
+        loadData()
 
         initViews()
         observeData()
+    }
+
+
+    private fun loadData(){
+        val position = arguments?.getInt("position") ?: 0
+        val orderEnumValue = arguments?.getInt("orderEnumValue") ?: OrderEnum.Number.valueEnum
+        val query = arguments?.getString("query") ?: ""
+
+        viewModel.loadData(query, orderEnumValue)
+        binding.viewPager.postDelayed({
+            binding.progressBar.isVisible = false
+            binding.viewPager.setCurrentItem(position,false)
+        },50)
     }
 
     private fun initViews(){
