@@ -1,10 +1,9 @@
 package com.example.pokedexapp.data.utils
 
-import com.example.pokedexapp.data.remote.dto.pokemon_detail.StatDto
 
 object StatsUtil {
 
-    fun from(stats: List<StatDto>): StatsResult{
+    fun from(stats: List<StatsInfo>): StatsResult{
         var hp = 0
         var attack = 0
         var defence = 0
@@ -13,13 +12,13 @@ object StatsUtil {
         var speed = 0
 
         stats.forEach {
-            when(it.stat.name){
-                "hp" -> hp = it.base_stat
-                "attack" -> attack = it.base_stat
-                "defense" -> defence = it.base_stat
-                "special-attack" -> specialAttack = it.base_stat
-                "special-defense" -> specialDefense = it.base_stat
-                "speed" -> speed = it.base_stat
+            when(it.name){
+                "hp" -> hp = it.value
+                "attack" -> attack = it.value
+                "defense" -> defence = it.value
+                "special-attack" -> specialAttack = it.value
+                "special-defense" -> specialDefense = it.value
+                "speed" -> speed = it.value
             }
         }
 
@@ -30,7 +29,10 @@ object StatsUtil {
 
 }
 
-
+data class StatsInfo(
+    val name: String,
+    val value: Int
+)
 
 data class StatsResult(
     val hp: Int,
