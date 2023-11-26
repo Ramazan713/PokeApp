@@ -1,8 +1,8 @@
 package com.example.pokedexapp.domain.enums
 
-enum class OrderEnum(val valueEnum: Int) {
-    Number(1),
-    Name(2);
+enum class OrderEnum(val valueEnum: Int, val title: String) {
+    Number(1, title = "Number"),
+    Name(2, title = "Name");
 
     companion object{
         fun from(valueEnum: Int): OrderEnum{

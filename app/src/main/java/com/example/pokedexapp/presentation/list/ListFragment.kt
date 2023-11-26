@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
@@ -48,6 +51,9 @@ class ListFragment : Fragment(), OrderDialog.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        navController = findNavController()
+
         return ComposeView(requireContext()).apply {
             setContent {
                 val data = viewModel.pagingData.collectAsLazyPagingItems()
@@ -63,11 +69,9 @@ class ListFragment : Fragment(), OrderDialog.Listener {
                         )
                         navController.navigate(destination)
                     },
-                    onOrderByClick = {
-                        val dialog = OrderDialog(this@ListFragment,sortByState)
-                        dialog.show(childFragmentManager,null)
-                    },
-                    onEvent = viewModel::onEvent)
+                    currentOrderEnum = sortByState,
+                    onEvent = viewModel::onEvent
+                )
             }
         }
     }

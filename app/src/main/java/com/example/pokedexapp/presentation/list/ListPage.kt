@@ -9,18 +9,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.pokedexapp.R
+import com.example.pokedexapp.domain.enums.OrderEnum
 import com.example.pokedexapp.domain.models.PokemonPart
+import com.example.pokedexapp.presentation.filter_dialog.OrderDia
 import com.example.pokedexapp.presentation.filter_dialog.OrderDialog
 import com.example.pokedexapp.presentation.list.components.ListTopBar
 import com.example.pokedexapp.presentation.list.components.PokemonListItem
@@ -31,10 +43,22 @@ import kotlinx.coroutines.flow.flow
 fun ListPage(
     modifier: Modifier = Modifier,
     data: LazyPagingItems<PokemonPart>,
+    currentOrderEnum: OrderEnum?,
     onItemClick: (PokemonPart, Int) -> Unit,
-    onOrderByClick: () -> Unit,
     onEvent: (ListEvent) -> Unit
 ) {
+
+    var showOrderDia by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val isLoading by remember(data) {
+        derivedStateOf {
+            data.loadState.refresh is LoadState.Loading
+        }
+    }
+
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -46,17 +70,27 @@ fun ListPage(
                 onValueChange = { q->
                     onEvent(ListEvent.Search(q))
                 },
-                onOrderByClick = onOrderByClick
+                onOrderByClick = {
+                    showOrderDia = true
+                }
             )
         },
         containerColor = colorResource(id = R.color.brandColor)
     ) {paddings->
         Box(modifier = Modifier.padding(paddings)){
+
+            if(isLoading){
+                CircularProgressIndicator(
+                    modifier = Modifier.zIndex(2f).align(Alignment.Center)
+                )
+            }
+
+
             LazyVerticalGrid(
                 modifier = Modifier
                     .padding(2.dp)
                     .fillMaxSize()
-                    .background(colorResource(id = R.color.onBrandColor),RoundedCornerShape(8.dp))
+                    .background(colorResource(id = R.color.onBrandColor), RoundedCornerShape(8.dp))
                 ,
                 columns = GridCells.Adaptive(130.dp),
                 contentPadding = PaddingValues(horizontal = 4.dp)
@@ -77,6 +111,18 @@ fun ListPage(
 
         }
     }
+
+
+    if(showOrderDia){
+        OrderDia(
+            dismiss = { showOrderDia = false },
+            orderEnum = currentOrderEnum,
+            onSelected = {
+                onEvent(ListEvent.SortBy(it))
+            }
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
@@ -87,8 +133,9 @@ fun ListPagePreview() {
 
     ListPage(
         onItemClick = {p,i->},
-        onOrderByClick = {},
         onEvent = {},
-        data = data
+        data = data,
+        currentOrderEnum = null
+
     )
 }
