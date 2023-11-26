@@ -89,6 +89,9 @@ dependencies {
     ksp ("com.google.dagger:hilt-compiler:2.48")
     ksp ("androidx.hilt:hilt-compiler:1.0.0")
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")

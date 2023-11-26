@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokedexapp.databinding.PokemonListItemBinding
 import com.example.pokedexapp.domain.models.Pokemon
 import com.example.pokedexapp.domain.models.PokemonPart
+import com.example.pokedexapp.presentation.list.components.PokemonListItem
 import com.example.pokedexapp.presentation.utils.downloadUrl
 
 class ListAdapter constructor(
@@ -30,13 +31,14 @@ class ListAdapter constructor(
 
     override fun onBindViewHolder(holder: ListAdapterHolder, position: Int) {
         val item = getItem(position) ?: return
-        holder.binding.let { binding->
-            binding.itemId.text = Pokemon.getIdWithHash(item.pokemonId)
-            binding.itemName.text = item.name
-            binding.itemImage.downloadUrl(item.imageUrl)
-            binding.root.setOnClickListener {
-                listener.onClick(item,position)
-            }
+
+        holder.binding.composeItem.setContent {
+            PokemonListItem(
+                item = item,
+                onClick = {
+                    listener.onClick(item,position)
+                }
+            )
         }
     }
 
