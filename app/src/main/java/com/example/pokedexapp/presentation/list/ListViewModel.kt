@@ -16,21 +16,32 @@ import com.example.pokedexapp.domain.repo.PokemonRepo
 import com.example.pokedexapp.domain.use_cases.GetPokemonsPartUseCase
 import com.example.pokedexapp.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.switchMap
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+@OptIn(ExperimentalCoroutinesApi::class)
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
     private val getPokemonsUseCase: GetPokemonsPartUseCase
 ): ViewModel(){
-    private val mutableOpt = MutableLiveData(LoadOpt())
-    val opt: LiveData<LoadOpt> = mutableOpt
+    private val mutableOpt = MutableStateFlow(LoadOpt())
+    val opt: StateFlow<LoadOpt> = mutableOpt
 
-    val sortBy: LiveData<OrderEnum> = mutableOpt.map { it.orderEnum }
+    val sortBy: Flow<OrderEnum> = mutableOpt.map { it.orderEnum }
 
-    val pagingData = mutableOpt.switchMap { opt->
+    val pagingData = mutableOpt.flatMapLatest { opt ->
         getPokemonsUseCase(opt)
     }.cachedIn(viewModelScope)
 

@@ -21,6 +21,8 @@ import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.repo.PokemonRepo
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PokemonRepoImpl @Inject constructor(
@@ -51,7 +53,7 @@ class PokemonRepoImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>> {
+    override fun getPokemonsPaging(opt: LoadOpt): Flow<PagingData<PokemonPart>> {
 
         val pager = Pager(
             config = PagingConfig(
@@ -77,7 +79,7 @@ class PokemonRepoImpl @Inject constructor(
                 }
             }
         )
-        return pager.liveData.map {pagingData->
+        return pager.flow.map {pagingData->
             pagingData.map { it.toPokemonPart() }
         }
     }

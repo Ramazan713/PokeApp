@@ -6,11 +6,12 @@ import com.example.pokedexapp.domain.models.LoadOpt
 import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepo {
 
     fun getPokemonDetailsPaging(opt: LoadOpt): LiveData<PagingData<PokemonDetail>>
 
 
-    fun getPokemonsPaging(opt: LoadOpt): LiveData<PagingData<PokemonPart>>
+    fun getPokemonsPaging(opt: LoadOpt): Flow<PagingData<PokemonPart>>
 }

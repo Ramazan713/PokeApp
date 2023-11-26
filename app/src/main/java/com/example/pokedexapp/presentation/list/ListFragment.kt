@@ -10,14 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentListBinding
@@ -30,10 +34,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
+class ListFragment : Fragment(), OrderDialog.Listener {
 
     private val viewModel by viewModels<ListViewModel>()
-    private val adapter = ListAdapter(this)
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -45,64 +48,31 @@ class ListFragment : Fragment(), ListAdapter.Listener, OrderDialog.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val data = viewModel.pagingData.collectAsLazyPagingItems()
+                val sortByState by viewModel.sortBy.collectAsStateWithLifecycle(null)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        navController = findNavController()
-        initView()
-
-        observeData()
-    }
-
-
-    private fun initView(){
-        val layoutManager = GridLayoutManager(requireContext(),3)
-        binding.listRecyclerView.adapter = adapter
-        binding.listRecyclerView.layoutManager = layoutManager
-
-        binding.composeSearch.setContent {
-            ListTopBar(
-                modifier = Modifier
-//                    .padding(top = 12.dp, bottom = 24.dp)
-//                    .padding(horizontal = 12.dp),
-                        ,
-                onValueChange = {q->
-                    viewModel.onEvent(ListEvent.Search(q))
-                },
-                onOrderByClick = {
-                    val dialog = OrderDialog(this,viewModel.sortBy.value)
-                    dialog.show(childFragmentManager,null)
-                }
-            )
-        }
-    }
-
-    private fun observeData(){
-        viewModel.pagingData.observe(viewLifecycleOwner){pagingData->
-           lifecycleScope.launch {
-               adapter.submitData(pagingData)
-           }
-        }
-        viewModel.sortBy.observe(viewLifecycleOwner){}
-
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadState->
-                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+                ListPage(
+                    data = data,
+                    onItemClick = { _, i->
+                        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(
+                            position = i,
+                            query = viewModel.opt.value.query,
+                            orderEnumValue = viewModel.opt.value.orderEnum.valueEnum
+                        )
+                        navController.navigate(destination)
+                    },
+                    onOrderByClick = {
+                        val dialog = OrderDialog(this@ListFragment,sortByState)
+                        dialog.show(childFragmentManager,null)
+                    },
+                    onEvent = viewModel::onEvent)
             }
         }
     }
 
-    override fun onClick(item: PokemonPart,position: Int) {
-        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(
-            position = position,
-            query = viewModel.opt.value?.query ?: "",
-            orderEnumValue = viewModel.opt.value?.orderEnum?.valueEnum ?: OrderEnum.Number.valueEnum
-        )
-        navController.navigate(destination)
-    }
+
 
     override fun onSelected(orderEnum: OrderEnum) {
         viewModel.onEvent(ListEvent.SortBy(orderEnum))
