@@ -1,33 +1,20 @@
 package com.example.pokedexapp
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.compose.setContent
-import com.example.pokedexapp.databinding.ActivityMainBinding
 import com.example.pokedexapp.presentation.MyApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContent {
             MyApp()
         }
-
-//        setContentView(binding.root)
     }
 }
