@@ -13,6 +13,13 @@ import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.repo.PokemonRepo
 import com.example.pokedexapp.domain.use_cases.GetPokemonsPartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.switchMap
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,15 +28,18 @@ class DetailViewModel @Inject constructor(
     private val pokemonRepo: PokemonRepo,
 ): ViewModel(){
 
-    private val mutableOpt = MutableLiveData<LoadOpt>()
+    private val mutableOpt = MutableStateFlow<LoadOpt?>(null)
 
-    val pagingData = mutableOpt.switchMap { opt->
-        pokemonRepo.getPokemonDetailsPaging(opt)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val pagingData = mutableOpt.filter { it != null }.flatMapLatest { opt ->
+        pokemonRepo.getPokemonDetailsPaging(opt!!)
     }.cachedIn(viewModelScope)
 
     fun loadData(query: String, orderValueEnum: Int){
-        val orderEnum = OrderEnum.from(orderValueEnum)
-        val opt = LoadOpt(query, orderEnum)
-        mutableOpt.value = opt
+        viewModelScope.launch {
+            val orderEnum = OrderEnum.from(orderValueEnum)
+            val opt = LoadOpt(query, orderEnum)
+            mutableOpt.update { opt }
+        }
     }
 }

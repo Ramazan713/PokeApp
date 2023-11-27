@@ -30,7 +30,7 @@ class PokemonRepoImpl @Inject constructor(
     private val db: AppDatabase,
     private val sharedPreferences: SharedPreferences,
 ): PokemonRepo {
-    override fun getPokemonDetailsPaging(opt: LoadOpt): LiveData<PagingData<PokemonDetail>> {
+    override fun getPokemonDetailsPaging(opt: LoadOpt): Flow<PagingData<PokemonDetail>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = K.pageSize
@@ -47,7 +47,7 @@ class PokemonRepoImpl @Inject constructor(
                 }
             }
         )
-        return pager.liveData.map {pagingData->
+        return pager.flow.map {pagingData->
             pagingData.map { it.toPokemonDetail() }
         }
     }

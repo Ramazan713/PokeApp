@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepo {
 
-    fun getPokemonDetailsPaging(opt: LoadOpt): LiveData<PagingData<PokemonDetail>>
+    fun getPokemonDetailsPaging(opt: LoadOpt): Flow<PagingData<PokemonDetail>>
 
 
     fun getPokemonsPaging(opt: LoadOpt): Flow<PagingData<PokemonPart>>

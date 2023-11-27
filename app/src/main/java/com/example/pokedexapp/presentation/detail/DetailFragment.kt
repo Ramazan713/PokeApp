@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ProgressBar
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.doOnAttach
@@ -22,6 +23,7 @@ import androidx.core.view.marginRight
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pokedexapp.R
 import com.example.pokedexapp.databinding.FragmentDetailBinding
@@ -38,10 +40,9 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class DetailFragment : Fragment(), DetailAdapter.Listener {
+class DetailFragment : Fragment() {
 
     private val viewModel by viewModels<DetailViewModel>()
-    private lateinit var adapter: DetailAdapter
 
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
@@ -51,58 +52,25 @@ class DetailFragment : Fragment(), DetailAdapter.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        adapter = DetailAdapter(requireContext(),this)
-        loadData()
-
-        initViews()
-        observeData()
-    }
-
-
-    private fun loadData(){
         val position = arguments?.getInt("position") ?: 0
         val orderEnumValue = arguments?.getInt("orderEnumValue") ?: OrderEnum.Number.valueEnum
         val query = arguments?.getString("query") ?: ""
 
-        viewModel.loadData(query, orderEnumValue)
-        binding.viewPager.postDelayed({
-            binding.progressBar.isVisible = false
-            binding.viewPager.setCurrentItem(position,false)
-        },50)
-    }
+        viewModel.loadData(query,orderEnumValue)
 
-    private fun initViews(){
-        binding.viewPager.adapter = adapter
-    }
+        return ComposeView(requireContext()).apply {
+            setContent {
 
-    private fun observeData(){
-        viewModel.pagingData.observe(viewLifecycleOwner){data->
-            lifecycleScope.launch {
-                adapter.submitData(data)
+                val data = viewModel.pagingData.collectAsLazyPagingItems()
+
+                DetailPage(
+                    data = data,
+                    posInit = position,
+                    onNavigateBack = {
+                        findNavController().navigateUp()
+                    }
+                )
             }
-        }
-    }
-
-    override fun onNavigateBackClick() {
-        findNavController().navigateUp()
-    }
-
-    override fun onPrevious(item: PokemonDetail) {
-        binding.viewPager.let { pager->
-            pager.currentItem = pager.currentItem - 1
-        }
-    }
-
-    override fun onNext(item: PokemonDetail) {
-        binding.viewPager.let { pager->
-            pager.currentItem = pager.currentItem + 1
         }
     }
 }
