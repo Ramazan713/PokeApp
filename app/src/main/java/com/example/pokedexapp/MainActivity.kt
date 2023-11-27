@@ -9,7 +9,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.compose.setContent
 import com.example.pokedexapp.databinding.ActivityMainBinding
+import com.example.pokedexapp.presentation.MyApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +23,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        setContent {
+            MyApp()
+        }
+
+//        setContentView(binding.root)
     }
 }

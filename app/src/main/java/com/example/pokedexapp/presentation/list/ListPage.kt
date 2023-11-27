@@ -43,7 +43,7 @@ import kotlinx.coroutines.flow.flow
 fun ListPage(
     modifier: Modifier = Modifier,
     data: LazyPagingItems<PokemonPart>,
-    currentOrderEnum: OrderEnum?,
+    state: ListState,
     onItemClick: (PokemonPart, Int) -> Unit,
     onEvent: (ListEvent) -> Unit
 ) {
@@ -116,7 +116,7 @@ fun ListPage(
     if(showOrderDia){
         OrderDia(
             dismiss = { showOrderDia = false },
-            orderEnum = currentOrderEnum,
+            orderEnum = state.orderEnum,
             onSelected = {
                 onEvent(ListEvent.SortBy(it))
             }
@@ -135,7 +135,6 @@ fun ListPagePreview() {
         onItemClick = {p,i->},
         onEvent = {},
         data = data,
-        currentOrderEnum = null
-
+        state = ListState()
     )
 }

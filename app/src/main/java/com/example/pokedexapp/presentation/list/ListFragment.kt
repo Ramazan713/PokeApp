@@ -56,22 +56,22 @@ class ListFragment : Fragment(), OrderDialog.Listener {
 
         return ComposeView(requireContext()).apply {
             setContent {
-                val data = viewModel.pagingData.collectAsLazyPagingItems()
-                val sortByState by viewModel.sortBy.collectAsStateWithLifecycle(null)
-
-                ListPage(
-                    data = data,
-                    onItemClick = { _, i->
-                        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(
-                            position = i,
-                            query = viewModel.opt.value.query,
-                            orderEnumValue = viewModel.opt.value.orderEnum.valueEnum
-                        )
-                        navController.navigate(destination)
-                    },
-                    currentOrderEnum = sortByState,
-                    onEvent = viewModel::onEvent
-                )
+//                val data = viewModel.pagingData.collectAsLazyPagingItems()
+//                val sortByState by viewModel.sortBy.collectAsStateWithLifecycle(null)
+//
+//                ListPage(
+//                    data = data,
+//                    onItemClick = { _, i->
+//                        val destination = ListFragmentDirections.actionHomeFragmentToDetailFragment3(
+//                            position = i,
+//                            query = viewModel.opt.value.query,
+//                            orderEnumValue = viewModel.opt.value.orderEnum.valueEnum
+//                        )
+//                        navController.navigate(destination)
+//                    },
+//                    currentOrderEnum = sortByState,
+//                    onEvent = viewModel::onEvent
+//                )
             }
         }
     }

@@ -56,8 +56,6 @@ class DetailFragment : Fragment() {
         val orderEnumValue = arguments?.getInt("orderEnumValue") ?: OrderEnum.Number.valueEnum
         val query = arguments?.getString("query") ?: ""
 
-        viewModel.loadData(query,orderEnumValue)
-
         return ComposeView(requireContext()).apply {
             setContent {
 
