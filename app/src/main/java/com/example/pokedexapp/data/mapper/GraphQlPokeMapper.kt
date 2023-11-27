@@ -32,7 +32,7 @@ fun PokemonV2Pokemon.toPokemonEntity(
         height = height,
         remoteKey = remoteKey,
         imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png",
-        flavorText = pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesflavortexts.firstOrNull()?.flavor_text ?: "",
+        flavorText = pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesflavortexts.firstOrNull()?.flavor_text?.replace("\n","") ?: "",
         colorName = pokemon_v2_pokemonspecy.pokemon_v2_pokemoncolor.name,
         speed = statsResult.speed,
         hp = statsResult.hp,

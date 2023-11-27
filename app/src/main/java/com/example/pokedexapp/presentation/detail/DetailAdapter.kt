@@ -19,6 +19,7 @@ import com.example.pokedexapp.domain.extensions.fillWith
 import com.example.pokedexapp.domain.models.PokemonDetail
 import com.example.pokedexapp.domain.models.PokemonPart
 import com.example.pokedexapp.domain.utils.Colors
+import com.example.pokedexapp.presentation.detail.components.DetailPageItem
 import com.example.pokedexapp.presentation.list.ListAdapter
 import com.example.pokedexapp.presentation.utils.downloadUrl
 import com.google.android.material.chip.Chip
@@ -51,89 +52,26 @@ class DetailAdapter constructor(
         val data = getItem(position) ?: return
         val binding = holder.binding
 
-        val pokemon = data.pokemon
-        val color = data.baseColor
-
-        binding.barTitle.text = pokemon.name
-        binding.barNumber.text = pokemon.idWithHash
-        binding.nextArrow.isVisible = position != itemCount - 1
-        binding.previousArrow.isVisible = position != 0
-
-        binding.barNavigateBack.setOnClickListener {
-            listener.onNavigateBackClick()
-        }
-        binding.nextArrow.setOnClickListener {
-            listener.onNext(data)
-        }
-        binding.previousArrow.setOnClickListener {
-            listener.onPrevious(data)
-        }
-
-
-        binding.root.backgroundTintList = ColorStateList.valueOf(color)
-        binding.image.downloadUrl(pokemon.imageUrl)
-        binding.card.baseStateText.setTextColor(color)
-        binding.card.aboutText.setTextColor(color)
-
-        binding.card.chipLayout.let { l ->
-            l.removeAllViews()
-            data.types.forEach { type->
-                val chip = Chip(context).apply {
-                    text = type.name
-                    setTextColor(context.getColor(R.color.onBrandColor))
-                    chipBackgroundColor = ColorStateList.valueOf(Colors.getColor(type.name))
-                    chipStrokeWidth = 0f
-                }
-                l.addView(chip,
-                    ViewGroup.MarginLayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    .apply { setMargins(0,0,16,0) })
-            }
-        }
-
-        binding.card.physicalInfo.let { info->
-            info.weightText.text = "${pokemon.weightInKg} kg"
-            info.heightText.text = "${pokemon.heightInMetre} m"
-            info.moveText.text = data.moves.joinToString("\n") { it.name }
-        }
-
-        binding.card.statsDetail.let { l ->
-            l.hpText.text = pokemon.hp.fillWith()
-            l.atkText.text = pokemon.attack.fillWith()
-            l.defText.text = pokemon.defence.fillWith()
-            l.satkText.text = pokemon.specialAttack.fillWith()
-            l.sdefText.text = pokemon.specialDefense.fillWith()
-            l.spdText.text = pokemon.speed.fillWith()
-
-            l.hpTitle.setTextColor(color)
-            l.atkTitle.setTextColor(color)
-            l.defTitle.setTextColor(color)
-            l.satkTitle.setTextColor(color)
-            l.sdefTitle.setTextColor(color)
-            l.spdTitle.setTextColor(color)
-
-            l.hpProgressBar.progressBar.setData(color,pokemon.hp)
-            l.atkProgressBar.progressBar.setData(color,pokemon.attack)
-            l.defProgressBar.progressBar.setData(color,pokemon.defence)
-            l.satkProgressBar.progressBar.setData(color,pokemon.specialAttack)
-            l.sdefProgressBar.progressBar.setData(color,pokemon.specialDefense)
-            l.spdProgressBar.progressBar.setData(color,pokemon.speed)
+        binding.composePageItem.setContent {
+            DetailPageItem(
+                pokemonDetail = data,
+                onNavigateBack = {
+                    listener.onNavigateBackClick()
+                },
+                onPrevious = {
+                    listener.onPrevious(data)
+                },
+                onNext = {
+                    listener.onNext(data)
+                },
+                previousVisible = position != 0,
+                nextVisible = position != itemCount - 1
+            )
         }
 
         binding.root.isVisible = true
     }
 }
-
-private fun ProgressBar.setData(color: Int, progress: Int){
-    val drawable = this.progressDrawable as LayerDrawable
-    drawable.findDrawableByLayerId(R.id.progressBackgroundLayer).setTint(ColorUtils.setAlphaComponent(color,50))
-    drawable.findDrawableByLayerId(R.id.progressLayer).setTint(color)
-
-    this.setProgress(progress,true)
-}
-
 
 private val diffCallback = object : DiffUtil.ItemCallback<PokemonDetail>(){
     override fun areItemsTheSame(oldItem: PokemonDetail, newItem: PokemonDetail): Boolean {

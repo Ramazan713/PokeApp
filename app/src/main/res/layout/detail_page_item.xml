@@ -1,134 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+
+
+<androidx.compose.ui.platform.ComposeView
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.detail.DetailFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#034701"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone"
-    >
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:backgroundTint="@android:color/transparent"
-        >
-
-        <Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:paddingHorizontal="20dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="24dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                >
-
-                <ImageView
-                    android:id="@+id/barNavigateBack"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    app:tint="@color/onBrandColor"
-                    android:src="@drawable/baseline_arrow_back_24"
-                    android:contentDescription="Back" />
-                <Space
-                    android:layout_width="8dp"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView
-                    android:id="@+id/barTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/onBrandColor"
-                    android:textStyle="bold"
-                    style="@style/MaterialAlertDialog.Material3.Title.Text"
-                    />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:id="@+id/barNumber"
-                    style="@style/TextAppearance.Material3.BodyLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/onBrandColor"
-                    android:textStyle="bold"
-                    />
-            </LinearLayout>
-        </Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        >
+    android:id="@+id/composePageItem"
+    />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.3"
-            android:elevation="3dp"
-            android:src="@drawable/pokeball"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--<androidx.coordinatorlayout.widget.CoordinatorLayout-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    tools:context=".presentation.detail.DetailFragment"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:background="#034701"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:visibility="gone"-->
+<!--    >-->
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@android:color/transparent"-->
+<!--        android:backgroundTint="@android:color/transparent"-->
+<!--        >-->
+
+<!--        <Toolbar-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+<!--            <LinearLayout-->
+<!--                android:paddingHorizontal="20dp"-->
+<!--                android:paddingTop="20dp"-->
+<!--                android:paddingBottom="24dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                >-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/barNavigateBack"-->
+<!--                    android:layout_width="36dp"-->
+<!--                    android:layout_height="36dp"-->
+<!--                    app:tint="@color/onBrandColor"-->
+<!--                    android:src="@drawable/baseline_arrow_back_24"-->
+<!--                    android:contentDescription="Back" />-->
+<!--                <Space-->
+<!--                    android:layout_width="8dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:id="@+id/barTitle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text=""-->
+<!--                    android:textColor="@color/onBrandColor"-->
+<!--                    android:textStyle="bold"-->
+<!--                    style="@style/MaterialAlertDialog.Material3.Title.Text"-->
+<!--                    />-->
+
+<!--                <Space-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"/>-->
+<!--                <TextView-->
+<!--                    android:id="@+id/barNumber"-->
+<!--                    style="@style/TextAppearance.Material3.BodyLarge"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text=""-->
+<!--                    android:textColor="@color/onBrandColor"-->
+<!--                    android:textStyle="bold"-->
+<!--                    />-->
+<!--            </LinearLayout>-->
+<!--        </Toolbar>-->
+
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_margin="4dp"-->
+<!--        >-->
 
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center|bottom"
-            android:layout_marginBottom="-70dp"
-            android:elevation="4dp"
-            app:layout_constraintBottom_toTopOf="@+id/card"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/previousArrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_ios_24"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
-            app:layout_constraintEnd_toStartOf="@+id/image"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image"
-            app:tint="@color/onBrandColor" />
-
-        <ImageView
-            android:id="@+id/nextArrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_forward_ios_24"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image"
-            app:layout_constraintTop_toTopOf="@+id/image"
-            app:tint="@color/onBrandColor" />
-
-        <include
-            android:id="@+id/card"
-            layout="@layout/detail_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:alpha="0.3"-->
+<!--            android:elevation="3dp"-->
+<!--            android:src="@drawable/pokeball"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
+<!--        <ImageView-->
+<!--            android:id="@+id/image"-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:layout_gravity="center|bottom"-->
+<!--            android:layout_marginBottom="-70dp"-->
+<!--            android:elevation="4dp"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/card"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--        <ImageView-->
+<!--            android:id="@+id/previousArrow"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/baseline_arrow_back_ios_24"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/image"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/image"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/image"-->
+<!--            app:tint="@color/onBrandColor" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/nextArrow"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/baseline_arrow_forward_ios_24"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/image"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/image"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/image"-->
+<!--            app:tint="@color/onBrandColor" />-->
+
+<!--        <include-->
+<!--            android:id="@+id/card"-->
+<!--            layout="@layout/detail_card"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+<!--</androidx.coordinatorlayout.widget.CoordinatorLayout>-->
