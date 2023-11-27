@@ -5,6 +5,7 @@
 - MVVM
 - Clean Architecture
 - Dependency Injection With Hilt
+- GraphQl
 - Room
 - Paging 3
 - ViewPager2
