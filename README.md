@@ -2,15 +2,14 @@
 
 ## Technologies and Libraries
 - Kotlin
-- MVVM
+- Compose
 - Clean Architecture
 - Dependency Injection With Hilt
 - GraphQl
 - Room
+- GraphQl
 - Paging 3
-- ViewPager2
 - Remote Api
-- Fragment & View
 
 
 ## Screenshots
